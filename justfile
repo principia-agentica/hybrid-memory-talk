@@ -30,3 +30,13 @@ format:
 
 test:
     PYTHONPATH=src pytest tests
+
+# --- Demo ---
+# Run the CLI demo that seeds policies and walks through the hybrid memory flow
+# Usage: just demo
+#        (or) just run-demo
+demo:
+    PYTHONPATH=src python -m examples.demo
+
+# Friendly alias
+run-demo: demo
