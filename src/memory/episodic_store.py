@@ -9,11 +9,13 @@ class EpisodicStore:
     Backwards-compatible helpers: add() and topk() used by tests.
     """
 
-    def __init__(self, max_len: int = 2000, ttl_by_type: Optional[Dict[str, int]] = None):
+    def __init__(self, max_len: int = 2000, ttl_by_type: Optional[Dict[str, int]] = None, default_ttl_days: Optional[int] = None):
+        from config import EPISODIC_TTL_DAYS  # local import to avoid cycles on tooling
         self.max_len = max_len
         self.events = deque(maxlen=self.max_len)
-        # ttl_by_type: days per event type/category; default 30 if not specified
+        # ttl_by_type: days per event type/category; default from config if not specified
         self.ttl_by_type = ttl_by_type or {}
+        self.default_ttl_days = EPISODIC_TTL_DAYS if default_ttl_days is None else default_ttl_days
 
     def __repr__(self):
         return f"EpisodicStore(max_len={self.max_len}, num_events={self.__len__()})"
@@ -41,7 +43,7 @@ class EpisodicStore:
         if "ts" not in event:
             event["ts"] = datetime.utcnow().isoformat() + "Z"
         # set expires_at based on ttl_by_type
-        ttl_days = self.ttl_by_type.get(etype, 30)
+        ttl_days = self.ttl_by_type.get(etype, self.default_ttl_days)
         if ttl_days is not None and "expires_at" not in event:
             event["expires_at"] = (datetime.utcnow() + timedelta(days=ttl_days)).isoformat() + "Z"
         self.events.append(event)
