@@ -22,6 +22,7 @@ from memory.episodic_store import EpisodicStore
 from memory.semantic_store import SemanticStore
 from memory.hybrid_retriever import HybridRetriever
 from tracing.tracer import tracer as TRACER
+from .utils import p95_latency_ms
 
 
 # ---------------- Tiny offline encoder (hash sketch) ----------------
@@ -139,6 +140,11 @@ def run_demo():
     print_header("Assistant Answer 1")
     print(a1)
 
+    # Also list semantic item IDs retrieved to connect to Recall@k
+    sem_ids = [it.get("id") for it in ctx_after if it.get("kind") == "semantic" and it.get("id")]
+    if sem_ids:
+        print("\nSemantic items retrieved (ids):", ", ".join(sem_ids))
+
     # Follow-up turn (no new tools expected)
     q2 = "Thanks! What are the steps involved?"
     print_header("User Turn 2")
@@ -151,10 +157,13 @@ def run_demo():
     print_header("Assistant Answer 2")
     print(a2)
 
-    # Tiny metric: Recall@k for a canned query
-    r = recall_at_k(retriever, "password reset steps", relevant_ids=["policy_password", "policy_steps"])
+    # Tiny metric: Recall@k and P95 retrieval latency for a canned query
+    query = "password reset steps"
+    r = recall_at_k(retriever, query, relevant_ids=["policy_password", "policy_steps"])
+    p95 = p95_latency_ms(retriever, query, runs=20)
     print_header("Mini-metric")
-    print(f"Recall@k (k≈defaults) for 'password reset steps': {r:.2f}")
+    print(f"Recall@k (k≈defaults) for '{query}': {r:.2f}")
+    print(f"P95 retrieval latency over 20 runs: {p95:.1f} ms")
 
     # Traces location
     print_header("Tracing")
