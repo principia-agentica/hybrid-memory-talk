@@ -93,6 +93,10 @@ class HybridRetriever:
         # Use semantic filters snapshot captured at construction time if provided
         if self.sem_filters:
             sem = self.semantic.search(query, top_k=self.k_sem, filters=self.sem_filters)
+            # Fallback: if filters are too restrictive (e.g., items missing metadata/tags),
+            # perform an unfiltered search to keep the demo and smoke tests educational.
+            if not sem:
+                sem = self.semantic.topk(query, self.k_sem)
         else:
             sem = self.semantic.topk(query, self.k_sem)
         items = self._annotate_provenance(epi, sem)

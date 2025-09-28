@@ -33,4 +33,16 @@ def test_smoke_hybrid():
     llm = DummyLLM()
     output = llm.generate(prompt)
     print(output)
-    assert items
+
+    # Smoke assertions for symmetry with the plan
+    assert items, "retriever should return some items"
+    # Ensure we got both episodic and semantic context
+    kinds = [it.get("kind") for it in items]
+    assert any(k == "episodic" for k in kinds), "should include episodic items"
+    assert any(k == "semantic" for k in kinds), "should include semantic items"
+    # Default order without reranker: episodic first
+    assert items[0].get("kind") == "episodic"
+    # Provenance/source should be present
+    assert all("source" in it for it in items), "all items should carry provenance 'source'"
+    # Should not exceed requested k's (subject to dedupe/trim)
+    assert len(items) <= 4
