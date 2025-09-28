@@ -1,7 +1,53 @@
 # Example code for the talk "Hybrid memory in agents — from myth to a useful minimum viable"
 
-Objective
-- Show a minimal hybrid memory pipeline (episodic + semantic) with two tools and a simple retriever.
+This repository contains a small, fully offline demo that illustrates hybrid memory for agents (episodic + semantic), a simple hybrid retriever, two toy tools, a minimal orchestration Agent, and tiny JSONL traces.
+
+## Quickstart
+
+- pip install -e .
+- just demo  # run the CLI demo under examples/
+- just notebook  # open Jupyter Lab in examples/ with a narrative notebook
+- just test  # run the test suite
+
+## Architecture at a glance
+
+user → Agent → [Episodic + Semantic] via HybridRetriever → Answer (+ Tracer)
+
+```
+User question
+   ↓
+Agent (orchestration)
+   ↓                         ↘
+Episodic Store (recent N)     Hybrid Retriever → merged context → Answer
+   ↑                         ↗                                 ↘
+Semantic Store (policy k)                                   Tracer (JSONL)
+```
+
+- See the article and the plan for the full story:
+  - context/091925-memory-in-agents.md
+  - context/plan.md
+
+## Configuration (env overrides)
+The demo has sensible defaults but you can tweak behavior via environment variables (no code changes):
+
+```bash
+# Retrieval sizes
+export HM_K_EPI=4            # episodic window size (default 4)
+export HM_K_SEM=3            # semantic top-k (default 3)
+
+# Token budget for merged context
+export HM_TOKEN_BUDGET=1600  # default 1600
+
+# Episodic TTL (days) used when an event type has no specific TTL
+export HM_EPISODIC_TTL_DAYS=30
+
+# Optional filters (JSON) applied by default
+export HM_EPI_FILTERS_JSON='{"session": "sess_1"}'
+export HM_SEM_FILTERS_JSON='{"tags": ["policy"], "pii": false}'
+
+# Lightweight semantic-first reranker
+export HM_RERANKER_ENABLED=true
+```
 
 ## Design notes
 
