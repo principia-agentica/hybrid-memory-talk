@@ -28,6 +28,11 @@ format:
     @just sync
     @ruff format .
 
+notebook:
+    # Ensure dependencies are synced, then run jupyter
+    @just sync
+    @jupyter lab --notebook-dir=examples/
+
 test:
     PYTHONPATH=src pytest tests
 
