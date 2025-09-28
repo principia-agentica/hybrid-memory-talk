@@ -3,7 +3,7 @@
 iniconfig==2.1.0
     # via pytest
 numpy==2.3.3
-    # via hybrid-memory-tslk (pyproject.toml)
+    # via hybrid-memory-talk (pyproject.toml)
 packaging==25.0
     # via pytest
 pluggy==1.6.0
@@ -11,6 +11,6 @@ pluggy==1.6.0
 pygments==2.19.2
     # via pytest
 pytest==8.4.2
-    # via hybrid-memory-tslk (pyproject.toml)
+    # via hybrid-memory-talk (pyproject.toml)
 ruff==0.13.2
-    # via hybrid-memory-tslk (pyproject.toml)
+    # via hybrid-memory-talk (pyproject.toml)
