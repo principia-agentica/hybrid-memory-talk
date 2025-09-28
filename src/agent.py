@@ -1,4 +1,4 @@
-from memory.retriever import HybridRetriever
+from memory.hybrid_retriever import HybridRetriever
 
 
 class Agent:
