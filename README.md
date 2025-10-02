@@ -23,12 +23,8 @@ Episodic Store (recent N)     Hybrid Retriever → merged context → Answer
 Semantic Store (policy k)                                   Tracer (JSONL)
 ```
 
-- See the article and the plan for the full story:
-  - context/091925-memory-in-agents.md
-  - context/plan.md
-
 ## Configuration (env overrides)
-The demo has sensible defaults but you can tweak behavior via environment variables (no code changes):
+The demo has sensible defaults, but you can tweak behavior via environment variables (no code changes):
 
 ```bash
 # Retrieval sizes
@@ -136,4 +132,4 @@ graph TD
 
 # Resources
 
-This repo is inspired in the article [Memory in Agents: Episodic vs. Semantic, and the Hybrid That Works](https://principia-agentica.io/blog/2025/09/19/memory-in-agents-episodic-vs-semantic-and-the-hybrid-that-works/)
+This repo is inspired by the article [Memory in Agents: Episodic vs. Semantic, and the Hybrid That Works](https://principia-agentica.io/blog/2025/09/19/memory-in-agents-episodic-vs-semantic-and-the-hybrid-that-works/)
